@@ -1,0 +1,197 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 210 40% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 11%;
+    --primary: 270 50% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 18% 93%;
+    --secondary-foreground: 210 40% 11%;
+    --muted: 210 18% 95%;
+    --muted-foreground: 210 12% 50%;
+    --accent: 270 40% 92%;
+    --accent-foreground: 270 50% 30%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 18% 89%;
+    --input: 210 18% 89%;
+    --ring: 270 50% 50%;
+    --radius: 0.75rem;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  [data-theme="jtc"] {
+    --background: 173 58% 39%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 100% / 0.12;
+    --card-foreground: 0 0% 100%;
+    --popover: 173 45% 30%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 173 58% 39%;
+    --secondary: 173 50% 34%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 173 50% 34%;
+    --muted-foreground: 0 0% 100% / 0.7;
+    --accent: 173 58% 44%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 100% / 0.2;
+    --input: 0 0% 100% / 0.15;
+    --ring: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 210 40% 6%;
+    --foreground: 210 18% 93%;
+    --card: 210 35% 9%;
+    --card-foreground: 210 18% 93%;
+    --popover: 210 35% 9%;
+    --popover-foreground: 210 18% 93%;
+    --primary: 270 50% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 30% 15%;
+    --secondary-foreground: 210 18% 93%;
+    --muted: 210 30% 15%;
+    --muted-foreground: 210 12% 55%;
+    --accent: 270 40% 20%;
+    --accent-foreground: 270 50% 80%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 210 30% 18%;
+    --input: 210 30% 18%;
+    --ring: 270 50% 55%;
+  }
+
+  * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #0cafa3;
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+  @keyframes floatK {
+  0%, 100% {
+    transform: translate(0, 0) rotate(var(--start-rot, 0deg)) scale(1);
+  }
+  20% {
+    transform: translate(calc(var(--drift-x, 40px) * 0.4), calc(var(--drift-y, -30px) * 0.6))
+               rotate(calc(var(--start-rot, 0deg) + 6deg)) scale(1.03);
+  }
+  45% {
+    transform: translate(var(--drift-x, 40px), calc(var(--drift-y, -30px) * 0.2))
+               rotate(calc(var(--start-rot, 0deg) + 14deg)) scale(0.97);
+  }
+  70% {
+    transform: translate(calc(var(--drift-x, 40px) * 0.6), calc(var(--drift-y, -30px) * -0.4))
+               rotate(calc(var(--start-rot, 0deg) + 8deg)) scale(1.01);
+  }
+}
+ 
+/* Sticky nav blur */
+nav.backdrop-blur-sm {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+ 
+/* RTL form/input text alignment */
+[dir="rtl"] input,
+[dir="rtl"] textarea {
+  text-align: right;
+}
+ 
+/* Hero underline accent */
+.hero-underline {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.35);
+  border-radius: 99px;
+}
+ 
+/* Step card step number */
+.step-number {
+  font-size: 0.7rem;
+  font-family: 'Space Mono', monospace;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.05em;
+}
+ 
+/* Form loading spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  animation: spin 0.7s linear infinite;
+}
+ 
+/* Animate-in utility (Tailwind v3 built-in, but defining fallback) */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slide-in-from-bottom {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes zoom-in-95 {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+@keyframes slide-in-from-top-1 {
+  from { transform: translateY(-4px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+ 
+/* Mobile: collapse form grid to single column below sm */
+@media (max-width: 639px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+ 
+/* Smooth RTL transition */
+[dir] {
+  transition: direction 0s; /* instant, no flicker */
+}
+ 
+/* Admin dashboard table mobile scroll hint */
+@media (max-width: 768px) {
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+ 
+/* Focus ring on teal theme inputs */
+[data-theme="jtc"] input:focus,
+[data-theme="jtc"] textarea:focus,
+[data-theme="jtc"] select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+}
+
+@keyframes kOrbit {
+  0%   { transform: rotate(0deg) scale(0.8); opacity: 0; }
+  30%  { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: rotate(360deg) scale(1.1); opacity: 0; }
+}
+ 
+}
