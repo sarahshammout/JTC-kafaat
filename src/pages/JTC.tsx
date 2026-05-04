@@ -13,7 +13,7 @@ import type { Lang } from '../lib/translations';
 import { useNavigate } from 'react-router-dom';
 import { addDonation, addRequest } from "@/lib/submissionStore";
 
-// ── Font injection (Space Grotesk + Inter) ──────────────────────────────
+// ── Font injection ──────────────────────────────────────────────────────
 function useFonts() {
   useEffect(() => {
     const id = 'jtc-fonts';
@@ -39,7 +39,7 @@ function FieldError({ msg }: { msg?: string }) {
 // ── Success card ────────────────────────────────────────────────────────
 function SuccessCard({ title, msg, onReset, lang }: { title: string; msg: string; onReset: () => void; lang: Lang }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
+    <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
       <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-5">
         <CheckCircle className="h-8 w-8 text-white" />
       </div>
@@ -56,21 +56,19 @@ function SuccessCard({ title, msg, onReset, lang }: { title: string; msg: string
   );
 }
 
-
-
 const stepIcons = [Gift, Wrench, CheckCircle];
 
 // ── Main page ───────────────────────────────────────────────────────────
 export default function JTC() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useFonts();
 
-const [lang, setLang] = useState<Lang>('en');
+  const [lang, setLang] = useState<Lang>('en');
   const tx = t[lang];
   const isRtl = lang === 'ar';
 
-  const statIcons = [Laptop, Users, Heart];  // ← add this
-  const stats = tx.impacts.stats.map((stat, i) => ({  // ← add this
+  const statIcons = [Laptop, Users, Heart];
+  const stats = tx.impacts.stats.map((stat, i) => ({
     icon: statIcons[i],
     value: stat.value,
     label: stat.label,
@@ -98,7 +96,7 @@ const [lang, setLang] = useState<Lang>('en');
   const validateDonation = () => {
     const errs: Record<string, string> = {};
     if (!donation.name.trim())   errs.name   = tx.validation.nameRequired;
-    if (!donation.phone.trim())  errs.phone  = tx.validation.nameRequired; // reuse "required" msg
+    if (!donation.phone.trim())  errs.phone  = tx.validation.nameRequired;
     if (!donation.brand.trim())  errs.brand  = tx.validation.nameRequired;
     if (!donation.model.trim())  errs.model  = tx.validation.nameRequired;
     if (!donation.serial.trim()) errs.serial = tx.validation.nameRequired;
@@ -122,7 +120,7 @@ const [lang, setLang] = useState<Lang>('en');
     if (Object.keys(errs).length) return;
     setDonationLoading(true);
     await new Promise(r => setTimeout(r, 1200));
-      addDonation({
+    addDonation({
       donorName: donation.name,
       phone: donation.phone,
       email: donation.email,
@@ -130,8 +128,7 @@ const [lang, setLang] = useState<Lang>('en');
       model: donation.model,
       serial: donation.serial,
       notes: donation.notes,
-  });
-
+    });
     setDonationLoading(false);
     setDonationSuccess(true);
   };
@@ -142,13 +139,13 @@ const [lang, setLang] = useState<Lang>('en');
     if (Object.keys(errs).length) return;
     setRequestLoading(true);
     await new Promise(r => setTimeout(r, 1200));
-      addRequest({
+    addRequest({
       name: request.name,
       age: Number(request.age),
       gender: request.gender,
       city: request.city,
       reason: request.reason,
-  });
+    });
     setRequestLoading(false);
     setRequestSuccess(true);
   };
@@ -166,19 +163,20 @@ const [lang, setLang] = useState<Lang>('en');
 
   return (
     <ProjectLayout theme="jtc">
-      {/* relative wrapper so FloatingKs (absolute) covers full page height */}
       <div className="relative flex flex-col min-h-screen" style={inter}>
 
         <FloatingKs />
 
         <div className="relative z-10 flex flex-col flex-1" dir={tx.dir}>
-          <nav className="flex flex-wrap gap-2 sm:gap-6 px-4 sm:px-12 py-3 items-center justify-between top-0 z-40 backdrop-blur-sm bg-[#0cafa3]/80">
-            <div className="flex flex-wrap gap-2 sm:gap-4">
+
+          {/* ── NAV ── */}
+          <nav className="flex items-center px-4 sm:px-10 py-3 border-b border-white/20 overflow-x-auto">
+            <div className="flex gap-1 sm:gap-4 flex-nowrap min-w-0">
               {navSections.map(s => (
                 <button
                   key={s.id}
                   onClick={() => scrollTo(s.id)}
-                  className="text-white/80 px-2 py-1 text-sm hover:text-white transition-colors cursor-pointer border-none bg-transparent font-medium underline-offset-4"
+                  className="text-white/80 px-2 py-1 text-xs sm:text-sm hover:text-white transition-colors cursor-pointer border-none bg-transparent font-medium underline-offset-4 whitespace-nowrap"
                   style={inter}
                 >
                   {s.label}
@@ -188,12 +186,15 @@ const [lang, setLang] = useState<Lang>('en');
           </nav>
 
           {/* ── HERO / ABOUT ── */}
-          <section id="about" className="min-h-[85vh] flex flex-col items-center justify-center text-center px-4 sm:px-6 py-20">
-            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '100ms' }}>
-              <div className="flex items-center gap-3">
+          <section id="about" className="min-h-[85vh] flex flex-col items-center justify-center text-center px-4 sm:px-6 py-16 sm:py-20">
+            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 w-full max-w-4xl" style={{ animationDelay: '100ms' }}>
+              {/* Language toggle */}
+              <div className="flex mb-6 w-full ml-auto">
                 <button
                   onClick={() => setLang(l => l === 'en' ? 'ar' : 'en')}
-                  className={`${lang === 'en' ? 'ml-auto' : 'mr-auto'} flex items-center gap-1.5 text-white/70 hover:text-white text-sm transition-colors px-2 py-1 rounded-lg hover:bg-white/10 border border-white/20`}
+                  className={`${lang === 'en' ? 'ml-auto' : 'mr-auto'}  inline-flex w-fit items-center gap-1.5 text-white/70 hover:text-white text-xs sm:text-sm px-3 py-2 sm:px-2 sm:py-1 rounded-lg
+                  hover:bg-white/10
+                  border border-white/20`}
                   style={inter}
                 >
                   <Globe className="h-3.5 w-3.5" />
@@ -202,28 +203,29 @@ const [lang, setLang] = useState<Lang>('en');
               </div>
 
               <h1
-                className="text-5xl sm:text-5xl lg:text-6xl font-bold text-[#1F3A5F] max-w-6xl leading-tight mb-6"
+                className="text-3xl sm:text-5xl lg:text-6xl font-bold text-[#1F3A5F] leading-tight mb-6"
                 style={grotesk}
               >
                 {tx.hero.title1}{' '}
-                <span className="text-white">
+                <span className="text-white relative">
                   {tx.hero.titleHighlight}
-                  <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white/30 rounded-full" />
+                  
                 </span>{' '}
                 {tx.hero.title2}
               </h1>
             </div>
 
-            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '250ms' }}>
-              <p className="text-white/90 text-base sm:text-lg max-w-2xl mb-10 leading-relaxed" style={inter}>
+            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 w-full max-w-2xl" style={{ animationDelay: '250ms' }}>
+              <p className="text-white/90 text-sm sm:text-base lg:text-lg mb-8 sm:mb-10 leading-relaxed px-2" style={inter}>
                 {tx.hero.subtitle}
               </p>
             </div>
 
-            <div className="flex gap-4 mb-6">
+            {/* CTA buttons — stacked on mobile */}
+            <div className="flex flex-col sm:flex-row gap-3 mb-6 w-full max-w-xs sm:max-w-none sm:w-auto">
               <Button
                 size="lg"
-                className="bg-white text-[#0cafa3] hover:bg-white/90 font-semibold rounded-xl px-8 py-6 transition-all shadow-lg"
+                className="w-full sm:w-auto bg-white text-[#0cafa3] hover:bg-white/90 font-semibold rounded-xl px-8 py-6 transition-all shadow-lg"
                 style={grotesk}
                 onClick={() => scrollTo('donate')}
               >
@@ -232,7 +234,7 @@ const [lang, setLang] = useState<Lang>('en');
               </Button>
               <Button
                 size="lg"
-                className="bg-transparent text-[#1F3A5F] font-semibold px-8 py-6 border-2 border-white/20 rounded-xl hover:bg-white/10 transition-all"
+                className="w-full sm:w-auto bg-transparent text-[#1F3A5F] font-semibold px-8 py-6 border-2 border-white/20 rounded-xl hover:bg-white/10 transition-all"
                 style={grotesk}
                 onClick={() => scrollTo('request')}
               >
@@ -252,10 +254,10 @@ const [lang, setLang] = useState<Lang>('en');
           </section>
 
           {/* ── HOW IT WORKS ── */}
-          <section id="how-it-works" className="py-16 sm:py-20 px-4 sm:px-16 text-center">
+          <section id="how-it-works" className="py-14 sm:py-20 px-4 sm:px-16 text-center">
             <h2 className="text-2xl sm:text-3xl font-bold text-[#1F3A5F] mb-3" style={grotesk}>{tx.howItWorks.title}</h2>
-            <p className="text-white/80 mb-12" style={inter}>{tx.howItWorks.subtitle}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+            <p className="text-white/80 mb-10 sm:mb-12 text-sm sm:text-base" style={inter}>{tx.howItWorks.subtitle}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-8 max-w-6xl mx-auto">
               {tx.howItWorks.steps.map((step, i) => {
                 const Icon = stepIcons[i];
                 return (
@@ -275,14 +277,14 @@ const [lang, setLang] = useState<Lang>('en');
 
           {/* ── IMPACT ── */}
           <section id="impacts" className="py-14 bg-black/10 mt-6" dir={isRtl ? 'rtl' : 'ltr'}>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-6xl mx-auto px-6 text-center">
+            <div className="grid grid-cols-3 gap-4 sm:gap-8 max-w-6xl mx-auto px-4 sm:px-6 text-center">
               {stats.map((stat, i) => (
                 <div key={i} className="space-y-2">
-                  <stat.icon className="h-8 w-8 text-white/70 mx-auto" />
-                  <div className="text-2xl font-bold text-[#1F3A5F]" style={grotesk}>
+                  <stat.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white/70 mx-auto" />
+                  <div className="text-lg sm:text-2xl font-bold text-[#1F3A5F]" style={grotesk}>
                     {stat.value}
                   </div>
-                  <div className="text-sm text-white/70" style={inter}>
+                  <div className="text-xs sm:text-sm text-white/70" style={inter}>
                     {stat.label}
                   </div>
                 </div>
@@ -291,17 +293,17 @@ const [lang, setLang] = useState<Lang>('en');
           </section>
 
           {/* ── FORMS ── */}
-          <section className="py-16 sm:py-20 px-4 sm:px-12 lg:px-20">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 max-w-6xl mx-auto">
+          <section className="py-14 sm:py-20 px-4 sm:px-12 lg:px-20">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 max-w-6xl mx-auto">
 
               {/* ── DONATE FORM ── */}
               <div id="donate">
                 <Card className="bg-white/15 border-white/20 h-full">
                   <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-3 text-xl sm:text-2xl" style={grotesk}>
-                      <Gift className="h-6 w-6 flex-shrink-0" /> {tx.donateForm.title}
+                    <CardTitle className="text-white flex items-center gap-3 text-lg sm:text-2xl" style={grotesk}>
+                      <Gift className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0" /> {tx.donateForm.title}
                     </CardTitle>
-                    <CardDescription className="text-white/70" style={inter}>{tx.donateForm.subtitle}</CardDescription>
+                    <CardDescription className="text-white/70 text-sm" style={inter}>{tx.donateForm.subtitle}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     {donationSuccess ? (
@@ -318,7 +320,6 @@ const [lang, setLang] = useState<Lang>('en');
                       <div className="space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                          {/* Name */}
                           <div className="space-y-1">
                             <Label className="text-white text-sm" style={inter}>
                               {tx.donateForm.name} <span className="text-red-300">*</span>
@@ -333,7 +334,6 @@ const [lang, setLang] = useState<Lang>('en');
                             <FieldError msg={donationErrors.name} />
                           </div>
 
-                          {/* Phone */}
                           <div className="space-y-1">
                             <Label className="text-white text-sm" style={inter}>
                               {tx.donateForm.phone} <span className="text-red-300">*</span>
@@ -348,7 +348,6 @@ const [lang, setLang] = useState<Lang>('en');
                             <FieldError msg={donationErrors.phone} />
                           </div>
 
-                          {/* Email */}
                           <div className="space-y-1">
                             <Label className="text-white text-sm" style={inter}>{tx.donateForm.email}</Label>
                             <Input
@@ -361,7 +360,6 @@ const [lang, setLang] = useState<Lang>('en');
                             <FieldError msg={donationErrors.email} />
                           </div>
 
-                          {/* Brand — now required */}
                           <div className="space-y-1">
                             <Label className="text-white text-sm" style={inter}>
                               {tx.donateForm.brand} <span className="text-red-300">*</span>
@@ -376,7 +374,6 @@ const [lang, setLang] = useState<Lang>('en');
                             <FieldError msg={donationErrors.brand} />
                           </div>
 
-                          {/* Model — now required */}
                           <div className="space-y-1">
                             <Label className="text-white text-sm" style={inter}>
                               {tx.donateForm.model} <span className="text-red-300">*</span>
@@ -391,7 +388,6 @@ const [lang, setLang] = useState<Lang>('en');
                             <FieldError msg={donationErrors.model} />
                           </div>
 
-                          {/* Serial — now required */}
                           <div className="space-y-1">
                             <Label className="text-white text-sm" style={inter}>
                               {tx.donateForm.serial} <span className="text-red-300">*</span>
@@ -408,7 +404,6 @@ const [lang, setLang] = useState<Lang>('en');
 
                         </div>
 
-                        {/* Notes */}
                         <div className="space-y-1">
                           <Label className="text-white text-sm" style={inter}>{tx.donateForm.notes}</Label>
                           <Textarea
@@ -444,10 +439,10 @@ const [lang, setLang] = useState<Lang>('en');
               <div id="request">
                 <Card className="bg-white/15 border-white/20 h-full">
                   <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2 text-xl sm:text-2xl" style={grotesk}>
-                      <Laptop className="h-6 w-6 flex-shrink-0" /> {tx.requestForm.title}
+                    <CardTitle className="text-white flex items-center gap-2 text-lg sm:text-2xl" style={grotesk}>
+                      <Laptop className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0" /> {tx.requestForm.title}
                     </CardTitle>
-                    <CardDescription className="text-white/70" style={inter}>{tx.requestForm.subtitle}</CardDescription>
+                    <CardDescription className="text-white/70 text-sm" style={inter}>{tx.requestForm.subtitle}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     {requestSuccess ? (
@@ -464,7 +459,6 @@ const [lang, setLang] = useState<Lang>('en');
                       <div className="space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                          {/* Name */}
                           <div className="space-y-1">
                             <Label className="text-white text-sm" style={inter}>
                               {tx.requestForm.name} <span className="text-red-300">*</span>
@@ -479,7 +473,6 @@ const [lang, setLang] = useState<Lang>('en');
                             <FieldError msg={requestErrors.name} />
                           </div>
 
-                          {/* Age */}
                           <div className="space-y-1">
                             <Label className="text-white text-sm" style={inter}>{tx.requestForm.age}</Label>
                             <Input
@@ -493,7 +486,6 @@ const [lang, setLang] = useState<Lang>('en');
                             />
                           </div>
 
-                          {/* Gender */}
                           <div className="space-y-1">
                             <Label className="text-white text-sm" style={inter}>
                               {tx.requestForm.gender} <span className="text-red-300">*</span>
@@ -527,7 +519,6 @@ const [lang, setLang] = useState<Lang>('en');
                             <FieldError msg={requestErrors.gender} />
                           </div>
 
-                          {/* City */}
                           <div className="space-y-1">
                             <Label className="text-white text-sm" style={inter}>
                               {tx.requestForm.city} <span className="text-red-300">*</span>
@@ -544,7 +535,6 @@ const [lang, setLang] = useState<Lang>('en');
 
                         </div>
 
-                        {/* Reason */}
                         <div className="space-y-1">
                           <Label className="text-white text-sm" style={inter}>
                             {tx.requestForm.reason} <span className="text-red-300">*</span>
@@ -580,6 +570,7 @@ const [lang, setLang] = useState<Lang>('en');
               </div>
             </div>
           </section>
+
           {/* ── FOOTER ── */}
           <footer className="bg-black/10 py-8 mt-10">
             <div className="max-w-6xl mx-auto px-6 text-center">

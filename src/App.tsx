@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import MainNav from './components/MainNav'
 import JTC from './pages/JTC'
-import AppLayout from './components/AppLayout'
+import AppLayout from './components/AdminLayout'
 import Dashboard from './pages/Dashboard'
 import Laptops from './pages/Laptops'
 import Donations from './pages/Donations'
