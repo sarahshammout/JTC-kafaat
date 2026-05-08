@@ -167,8 +167,7 @@ export default function JTC() {
         <FloatingKs />
     
         <div className="relative z-10 flex flex-col flex-1" dir={tx.dir}>
-          <MainNav onLangToggle={() => setLang(l => l === 'en' ? 'ar' : 'en')} />
-          {/* ── NAV ── */}
+          <MainNav lang={lang} onLangToggle={() => setLang(l => l === 'en' ? 'ar' : 'en')} />          {/* ── NAV ── */}
           <nav className="flex items-center px-4 sm:px-10 py-3 border-b border-white/20 overflow-x-auto">
             <div className="flex gap-1 sm:gap-4 flex-nowrap min-w-0">
               {navSections.map(s => (
