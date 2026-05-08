@@ -6,11 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import ProjectLayout from '../components/ProjectLayout';
 import FloatingKs from '../components/FloatingKs';
+import MainNav from '../components/MainNav';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Gift, Wrench, CheckCircle, Laptop, Heart, Users, ArrowRight, Globe, X } from "lucide-react";
+import { Gift, Wrench, CheckCircle, Laptop, Heart, Users, ArrowRight, X } from "lucide-react";
 import { t } from '../lib/translations';
 import type { Lang } from '../lib/translations';
-import { useNavigate } from 'react-router-dom';
 import { addDonation, addRequest } from "@/lib/submissionStore";
 
 // ── Font injection ──────────────────────────────────────────────────────
@@ -60,7 +60,6 @@ const stepIcons = [Gift, Wrench, CheckCircle];
 
 // ── Main page ───────────────────────────────────────────────────────────
 export default function JTC() {
-  const navigate = useNavigate();
   useFonts();
 
   const [lang, setLang] = useState<Lang>('en');
@@ -166,9 +165,9 @@ export default function JTC() {
       <div className="relative flex flex-col min-h-screen" style={inter}>
 
         <FloatingKs />
-
+    
         <div className="relative z-10 flex flex-col flex-1" dir={tx.dir}>
-
+          <MainNav onLangToggle={() => setLang(l => l === 'en' ? 'ar' : 'en')} />
           {/* ── NAV ── */}
           <nav className="flex items-center px-4 sm:px-10 py-3 border-b border-white/20 overflow-x-auto">
             <div className="flex gap-1 sm:gap-4 flex-nowrap min-w-0">
@@ -187,23 +186,9 @@ export default function JTC() {
 
           {/* ── HERO / ABOUT ── */}
           <section id="about" className="min-h-[85vh] flex flex-col items-center justify-center text-center px-4 sm:px-6 py-16 sm:py-20">
-            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 w-full max-w-4xl" style={{ animationDelay: '100ms' }}>
-              {/* Language toggle */}
-              <div className="flex mb-6 w-full ml-auto">
-                <button
-                  onClick={() => setLang(l => l === 'en' ? 'ar' : 'en')}
-                  className={`${lang === 'en' ? 'ml-auto' : 'mr-auto'}  inline-flex w-fit items-center gap-1.5 text-white/70 hover:text-white text-xs sm:text-sm px-3 py-2 sm:px-2 sm:py-1 rounded-lg
-                  hover:bg-white/10
-                  border border-white/20`}
-                  style={inter}
-                >
-                  <Globe className="h-3.5 w-3.5" />
-                  {lang === 'en' ? 'عربي' : 'English'}
-                </button>
-              </div>
-
+            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 w-full" style={{ animationDelay: '100ms' }}>
               <h1
-                className="text-3xl sm:text-5xl lg:text-6xl font-bold text-[#1F3A5F] leading-tight mb-6"
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1F3A5F] leading-tight mb-6"
                 style={grotesk}
               >
                 {tx.hero.title1}{' '}
@@ -240,16 +225,6 @@ export default function JTC() {
               >
                 {tx.hero.requestCta}
               </Button>
-            </div>
-
-            <div>
-              <button
-                onClick={() => navigate('/jtc/admin')}
-                className="text-white/40 text-sm hover:text-white/70 transition-colors flex items-center gap-1 cursor-pointer bg-transparent border-none"
-                style={inter}
-              >
-                {tx.hero.adminLink}
-              </button>
             </div>
           </section>
 
